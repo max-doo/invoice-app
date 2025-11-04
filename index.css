@@ -1,0 +1,420 @@
+:root {
+    --primary-color: #FF9800; /* Changed to orange */
+    --background-color: #f4f5f7;
+    --card-background-color: #ffffff;
+    --text-color: #333333;
+    --text-color-light: #999999;
+    --border-color: #e0e0e0;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+#root {
+    max-width: 480px;
+    margin: 0 auto;
+    background-color: var(--background-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding-top: 50px; /* Space for fixed header */
+    padding-bottom: 150px; /* Increased space for fixed action-bar and bottom nav */
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center; 
+    padding: 0 1rem;
+    background-color: var(--card-background-color);
+    z-index: 10;
+    min-height: 50px;
+}
+
+.header-back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    z-index: 1;
+    margin-left: -0.5rem; /* to align with edge */
+}
+
+.header-title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* New Order Type Tabs */
+.order-type-tabs-container {
+    padding: 0.5rem 1rem 0;
+    background-color: var(--background-color);
+}
+
+.order-type-tabs {
+    display: flex;
+    background-color: #e9e9e9;
+    border-radius: 8px;
+    padding: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.order-type-tab {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    background-color: transparent;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: var(--text-color-light);
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.order-type-tab.active {
+    background-color: var(--card-background-color);
+    color: var(--text-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+
+/* Order List */
+.order-list {
+    padding: 1rem;
+    flex-grow: 1;
+    background-color: var(--background-color);
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.order-list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+
+.order-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--card-background-color);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.order-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.order-card.selected {
+    border-color: var(--primary-color);
+}
+
+.order-details {
+    flex-grow: 1;
+}
+
+.order-details p {
+    margin: 0;
+}
+
+.order-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.order-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.order-source-tag {
+    border: 1px solid var(--border-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--text-color);
+}
+
+.order-amount {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.order-card-footer {
+    border-top: 1px solid var(--border-color);
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+}
+
+.order-date, .order-number {
+    font-size: 0.8rem;
+    color: var(--text-color-light);
+}
+
+.order-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+
+/* Custom Checkbox */
+.custom-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-background-color);
+}
+
+.custom-checkbox.checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.custom-checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.select-all-container .custom-checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+.select-all-container .custom-checkbox.checked::after {
+    font-size: 16px;
+}
+
+/* Placeholder View */
+.placeholder-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    flex-grow: 1;
+    color: var(--text-color-light);
+    background-color: var(--background-color);
+}
+
+/* Issued Invoices List */
+.issued-invoices-list {
+    padding: 1rem;
+    flex-grow: 1;
+    background-color: var(--background-color);
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.issued-invoices-list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+
+.invoice-card {
+    background-color: var(--card-background-color);
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.invoice-card-header, .invoice-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+}
+
+.invoice-card-header {
+    color: var(--text-color-light);
+    padding-bottom: 0.5rem;
+}
+
+.invoice-date-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.view-details-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--text-color-light);
+}
+
+.arrow-icon {
+    font-size: 1.2rem;
+    color: var(--text-color-light);
+}
+
+
+.invoice-card-body {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.service-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-right: 0.5rem;
+}
+
+.invoice-tag {
+    border: 1px solid var(--border-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--text-color);
+}
+
+.invoice-tag.refunded {
+    color: var(--text-color-light);
+}
+
+.invoice-tag.invoicing {
+    color: #2196F3; /* Blue color */
+}
+
+.invoice-amount {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.invoice-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-color-light);
+    font-size: 0.875rem;
+}
+
+/* Action Bar & Bottom Nav */
+.action-bar {
+    position: fixed;
+    bottom: 66px; /* Positioned above the bottom navigation bar */
+    left: 0;
+    right: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--background-color); /* Match bottom nav */
+}
+
+.select-all-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.select-all-container span {
+    font-size: 1rem;
+}
+
+.next-button {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.next-button:disabled {
+    background-color: #ffcc80; /* Light orange for disabled */
+    cursor: not-allowed;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    background-color: var(--card-background-color);
+    padding: 0.5rem 0 1rem 0; /* Adjusted padding, especially for safe area */
+}
+
+/* New Nav Item Styles */
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color-light);
+    font-family: inherit;
+    font-size: 0.875rem;
+}
+
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+}

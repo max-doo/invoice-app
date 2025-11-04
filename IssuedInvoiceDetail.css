@@ -1,0 +1,325 @@
+/* --- Issued Invoice Detail Page --- */
+.issued-invoice-detail-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
+.issued-invoice-detail-page .invoice-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background-color: var(--card-background-color);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.issued-invoice-detail-page .invoice-form-header h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+    /* Adjust for back button width */
+    transform: translateX(-12px); 
+}
+
+.issued-invoice-detail-page .invoice-header-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    z-index: 1;
+}
+
+.detail-main {
+    flex-grow: 1;
+    padding: 1rem;
+    padding-bottom: 120px; /* Space for footer */
+}
+
+.detail-card {
+    background-color: var(--card-background-color);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    padding: 0 1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem;
+}
+.detail-card .detail-row:last-child {
+    border-bottom: none;
+}
+.detail-row.header-row {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.detail-invoice-type {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.detail-invoice-status {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.detail-invoice-status.refunded {
+    color: var(--text-color-light);
+}
+
+.detail-invoice-status.invoicing {
+    color: #2196F3; /* Blue color */
+}
+
+.detail-label {
+    color: var(--text-color-light);
+}
+
+.detail-value {
+    color: var(--text-color);
+    max-width: 70%;
+    text-align: right;
+}
+.detail-value.amount {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.expand-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 0;
+    font-size: 0.875rem;
+    color: var(--text-color-light);
+    cursor: pointer;
+    gap: 4px;
+}
+.expand-info svg {
+    transition: transform 0.2s;
+    width: 20px;
+    height: 20px;
+}
+.expand-info svg.expanded {
+    transform: rotate(180deg);
+}
+
+.detail-row.orders-row {
+    padding: 1rem 0;
+}
+
+.view-link {
+    color: var(--text-color-light);
+    cursor: pointer;
+}
+
+.detail-row.stacked {
+    align-items: flex-start;
+    padding-bottom: 0.5rem;
+}
+.detail-row.stacked .detail-label {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.detail-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    padding: 1rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    gap: 1rem;
+    background-color: var(--card-background-color);
+    border-top: 1px solid var(--border-color);
+    z-index: 10;
+}
+
+.detail-footer-btn {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+    color: white;
+}
+
+.detail-footer-btn {
+    background-color: #5a5a5a;
+}
+
+/* --- Toast Notification --- */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    z-index: 2000;
+    font-size: 0.9rem;
+    animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -20px); }
+    15% { opacity: 1; transform: translate(-50%, 0); }
+    85% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+
+
+/* --- Email Edit Drawer --- */
+.drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.confirmation-drawer {
+    background-color: var(--background-color);
+    width: 100%;
+    max-width: 480px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-sizing: border-box;
+    animation: slideUp 0.3s ease-out;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--card-background-color);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.drawer-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.drawer-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color-light);
+    z-index: 1;
+}
+
+.drawer-content {
+    padding: 1rem;
+}
+
+.drawer-content-section {
+    background-color: var(--card-background-color);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+}
+
+.drawer-info-row.stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 0;
+    font-size: 1rem;
+}
+.drawer-info-row.stacked .drawer-info-label {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+
+.drawer-info-label {
+    color: var(--text-color-light);
+    flex-shrink: 0;
+    margin-right: 1rem;
+}
+
+.email-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--primary-color);
+    padding: 0.5rem 0;
+    color: black;
+    font-size: 1rem;
+    outline: none;
+    background-color: transparent;
+    box-sizing: border-box;
+}
+
+.email-input:focus {
+     border-bottom-width: 2px;
+}
+
+
+.drawer-footer {
+    padding: 1rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+.drawer-confirm-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: var(--card-background-color);
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
