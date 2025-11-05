@@ -143,6 +143,10 @@ export const IssuedInvoiceDetail = ({ invoice, onBack }) => {
                 return 'refunded';
             case '开票中':
                 return 'invoicing';
+            case '退票中':
+                return 'refunding';
+            case '已重开':
+                return 'reissued';
             default:
                 return ''; // for 已开票
         }
@@ -252,6 +256,12 @@ export const IssuedInvoiceDetail = ({ invoice, onBack }) => {
             {invoice.status === '已开票' && (
                 <footer className="detail-footer">
                     <button className="detail-footer-btn" onClick={handleResendInvoice}>重新发送发票</button>
+                    <button className="detail-footer-btn" onClick={() => setView('reissue')}>申请重开发票</button>
+                </footer>
+            )}
+            
+            {invoice.status === '已退票' && (
+                <footer className="detail-footer">
                     <button className="detail-footer-btn" onClick={() => setView('reissue')}>申请重开发票</button>
                 </footer>
             )}

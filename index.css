@@ -144,6 +144,8 @@ body {
 
 .order-details {
     flex-grow: 1;
+    min-width: 0; /* 允许flex子元素缩小到内容尺寸以下 */
+    overflow: hidden; /* 确保内容不会溢出 */
 }
 
 .order-details p {
@@ -154,12 +156,20 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    overflow: hidden; /* 限制整体宽度 */
+    width: fit-content; /* 让容器宽度适应内容 */
+    max-width: 100%; /* 但不超过父容器 */
 }
 
 .order-name {
     font-size: 1rem;
     font-weight: 500;
     color: var(--text-color);
+    /* 单行文本截断 - 显示省略号 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%; /* 限制最大宽度 */
 }
 
 .order-source-tag {
@@ -168,12 +178,16 @@ body {
     border-radius: 4px;
     font-size: 0.75rem;
     color: var(--text-color);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .order-amount {
     font-size: 1.25rem;
     font-weight: bold;
     color: var(--text-color);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .order-card-footer {
@@ -205,6 +219,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: var(--card-background-color);
+    flex-shrink: 0; /* 防止被压缩变形 */
 }
 
 .custom-checkbox.checked {
@@ -313,7 +328,7 @@ body {
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.75rem;
-    color: var(--text-color);
+    color: var(--primary-color);
 }
 
 .invoice-tag.refunded {
@@ -322,6 +337,14 @@ body {
 
 .invoice-tag.invoicing {
     color: #2196F3; /* Blue color */
+}
+
+.invoice-tag.refunding {
+    color: #2196F3; /* Blue color */
+}
+
+.invoice-tag.reissued {
+    color: var(--primary-color); 
 }
 
 .invoice-amount {

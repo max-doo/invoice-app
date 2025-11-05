@@ -5,7 +5,7 @@ import { IssuedInvoiceDetail } from './IssuedInvoiceDetail.tsx';
 
 const mockSaleOrders = [
     { id: 1, date: '2023年10月26日 14:20', name: '游戏币套餐', amount: 30.00, selected: false, orderNumber: 'NO20231026142051', source: '小程序' },
-    { id: 2, date: '2023年10月26日 12:15', name: '次票*1;游戏币套餐*2', amount: 200.00, selected: false, orderNumber: 'NO20231026121532', source: '收银台' },
+    { id: 2, date: '2023年10月26日 12:15', name: '次票*1;游戏币套餐*2;次卡*1;会员充值*1;抖音游戏币套餐*1;', amount: 200.00, selected: false, orderNumber: 'NO20231026121532', source: '收银台' },
     { id: 3, date: '2023年10月25日 18:30', name: '游戏币套餐', amount: 30.00, selected: false, orderNumber: 'NO20231025183011', source: '小程序' },
     { id: 4, date: '2023年10月25日 13:55', name: '次卡', amount: 55.50, selected: false, orderNumber: 'NO20231025135545', source: '收银台' },
     { id: 5, date: '2023年10月24日 11:05', name: '会员充值', amount: 100.00, selected: false, orderNumber: 'NO20231024110559', source: '小程序' },
@@ -18,6 +18,47 @@ const mockDeductionOrders = [
 ];
 
 const mockIssuedInvoices = [
+    {
+        id: 6,
+        datetime: '2025.10.19 周日 14:30',
+        service: '娱乐服务',
+        type: '电子发票',
+        amount: 280.00,
+        status: '退票中',
+        buyerName: '智能科技有限公司',
+        taxId: '91310000MA1FL3NX8C',
+        email: 'admin@smart-tech.com',
+        orderCount: 1,
+        orders: [
+            { id: 12, date: '2023年10月28日 14:30', name: '会员充值', amount: 280.00, orderNumber: 'NO20231028143000', source: '小程序' },
+        ],
+        address: '上海市浦东新区张江高科技园区',
+        phone: '021-66778899',
+        bank: '中国银行上海分行',
+        account: '1234567890123456',
+        remarks: '申请退票中'
+    },
+    {
+        id: 5,
+        datetime: '2025.10.18 周六 16:45',
+        service: '娱乐服务',
+        type: '电子发票',
+        amount: 350.00,
+        status: '已重开',
+        buyerName: '云端科技有限公司',
+        taxId: '91310115MA1K4EFGH2',
+        email: 'invoice@cloud-tech.com',
+        orderCount: 2,
+        orders: [
+            { id: 13, date: '2023年10月27日 16:45', name: '次票', amount: 150.00, orderNumber: 'NO20231027164500', source: '收银台' },
+            { id: 14, date: '2023年10月27日 16:50', name: '游戏币套餐', amount: 200.00, orderNumber: 'NO20231027165000', source: '小程序' },
+        ],
+        address: '上海市长宁区天山路999号',
+        phone: '021-55443322',
+        bank: '建设银行上海分行',
+        account: '5678901234567890',
+        remarks: '已重新开具发票'
+    },
     {
         id: 4,
         datetime: '2025.10.18 周六 10:00',
@@ -37,27 +78,6 @@ const mockIssuedInvoices = [
         bank: '未来银行上海分行',
         account: '9876543210987654',
         remarks: '加急处理'
-    },
-    {
-        id: 1,
-        datetime: '2025.10.17 周五 11:27',
-        service: '娱乐服务',
-        type: '电子发票',
-        amount: 30.91,
-        status: '已开票',
-        buyerName: '某某科技有限公司',
-        taxId: '91310000MA1FL2MX7B',
-        email: 'contact@example-tech.com',
-        orderCount: 2,
-        orders: [
-            { id: 2, date: '2023年10月26日 12:15', name: '次票', amount: 0.91, orderNumber: 'NO20231026121532', source: '收银台' },
-            { id: 3, date: '2023年10月25日 18:30', name: '游戏币套餐', amount: 30.00, orderNumber: 'NO20231025183011', source: '小程序' },
-        ],
-        address: '上海市示例路123号',
-        phone: '021-12345678',
-        bank: '中国工商银行上海分行',
-        account: '6222021001123456789',
-        remarks: '这是发票备注信息。'
     },
     {
         id: 2,
@@ -329,6 +349,10 @@ const IssuedInvoicesView = ({ invoices, onSelectInvoice }) => {
                 return 'refunded';
             case '开票中':
                 return 'invoicing';
+            case '退票中':
+                return 'refunding';
+            case '已重开':
+                return 'reissued';
             default:
                 return '';
         }
