@@ -127,6 +127,30 @@ const MoreInfoPage = ({ initialData, onSave, onBack }) => {
     );
 };
 
+// 格式化日期显示（带星期）
+const formatDateWithWeekday = (dateString: string): string => {
+    if (!dateString) return '';
+    const parsableDateString = dateString
+        .replace('年', '-')
+        .replace('月', '-')
+        .replace('日', '');
+    const date = new Date(parsableDateString);
+    if (isNaN(date.getTime())) {
+        return dateString.replace(/年|月/g, '.').replace(/日/, '');
+    }
+
+    const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    const weekday = weekdays[date.getDay()];
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${year}.${month}.${day} ${weekday} ${hours}:${minutes}`;
+};
+
 const InvoiceDetailPage = ({ totalAmount, selectedOrders, onBack }) => {
     const selectedCount = selectedOrders.length;
     return (
@@ -152,18 +176,36 @@ const InvoiceDetailPage = ({ totalAmount, selectedOrders, onBack }) => {
                         订单总数{selectedCount}笔
                     </div>
                     {selectedOrders.map(order => (
-                         <div key={order.id} className="details-invoice-card">
-                            <div className="details-list-item">
-                                <span>发票内容</span>
-                                <span>*娱乐服务*{order.name}费</span>
+                        <div key={order.id} className="order-card">
+                            <div className="order-card-content">
+                                <div className="order-details">
+                                    <div className="order-name-wrapper">
+                                        <p className="order-name">{order.name}</p>
+                                        {order.source && <span className="order-source-tag">{order.source}</span>}
+                                    </div>
+                                </div>
+                                <span className="order-amount">{order.amount.toFixed(2)}元</span>
                             </div>
-                            <div className="details-list-item">
-                                <span>开票方</span>
-                                <span>某某有限公司</span>
-                            </div>
-                            <div className="details-list-item">
-                                <span>发票金额</span>
-                                <span className="item-amount">{order.amount.toFixed(2)}元</span>
+                            <div className="order-card-footer">
+                                {order.date && (
+                                    <div className="order-date">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#999999"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                        <span>{formatDateWithWeekday(order.date)}</span>
+                                    </div>
+                                )}
+                                {order.orderNumber && (
+                                    <div className="order-number">订单编号: {order.orderNumber}</div>
+                                )}
+                                {order.items && order.items.length > 0 && (
+                                    <div className="order-items">
+                                        {order.items.map((item, index) => (
+                                            <div key={index} className="order-item">
+                                                <span className="order-item-name">{item.name}*{item.quantity}</span>
+                                                <span className="order-item-price">{item.price.toFixed(2)}元</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -174,7 +216,7 @@ const InvoiceDetailPage = ({ totalAmount, selectedOrders, onBack }) => {
 };
 
 
-const ConfirmationDrawer = ({ buyerName, taxId, headerType, email, idCardNumber, onConfirm, onClose }) => {
+const ConfirmationDrawer = ({ buyerName, taxId, headerType, email, smsPhone, idCardNumber, onConfirm, onClose }) => {
     return (
         <div className="drawer-overlay" onClick={onClose}>
             <div className="confirmation-drawer" onClick={(e) => e.stopPropagation()}>
@@ -204,6 +246,12 @@ const ConfirmationDrawer = ({ buyerName, taxId, headerType, email, idCardNumber,
                         )}
                     </div>
                     <div className="drawer-content-section">
+                        {smsPhone && (
+                            <div className="drawer-info-row">
+                                <span className="drawer-info-label">手机短信</span>
+                                <span className="drawer-info-value">{smsPhone}</span>
+                            </div>
+                        )}
                         <div className="drawer-info-row">
                             <span className="drawer-info-label">电子邮箱</span>
                             <span className="drawer-info-value">{email}</span>
@@ -270,6 +318,7 @@ export const InvoicePage = ({ totalAmount, selectedOrders, onBack, onGoToHistory
     const [taxId, setTaxId] = useState('');
     const [idCardNumber, setIdCardNumber] = useState('');
     const [email, setEmail] = useState('');
+    const [smsPhone, setSmsPhone] = useState('13800138000'); // 默认填入会员手机号
     const [isConfirmDrawerVisible, setIsConfirmDrawerVisible] = useState(false);
     const [isWeChatDrawerVisible, setIsWeChatDrawerVisible] = useState(false);
     const [moreInfo, setMoreInfo] = useState({
@@ -281,7 +330,7 @@ export const InvoicePage = ({ totalAmount, selectedOrders, onBack, onGoToHistory
     });
     
     const selectedCount = selectedOrders.length;
-    const isSubmitDisabled = !buyerName.trim() || !email.trim() || (headerType === 'corporate' && !taxId.trim());
+    const isSubmitDisabled = !buyerName.trim() || (headerType === 'corporate' && !taxId.trim()) || (!email.trim() && !smsPhone.trim());
 
     const handleSaveMoreInfo = (data) => {
         setMoreInfo(data);
@@ -323,7 +372,7 @@ export const InvoicePage = ({ totalAmount, selectedOrders, onBack, onGoToHistory
         );
     }
 
-    const filledMoreInfoCount = Object.values(moreInfo).filter(val => val.trim() !== '').length;
+    const filledMoreInfoCount = Object.values(moreInfo).filter((val: string) => val.trim() !== '').length;
 
     return (
         <div className="invoice-form-page">
@@ -361,7 +410,7 @@ export const InvoicePage = ({ totalAmount, selectedOrders, onBack, onGoToHistory
                         </div>
                     </div>
                     <div className="form-row">
-                        <label>购方名称</label>
+                        <label>购方名称<span className="required-star">*</span></label>
                         <div className="input-with-icon">
                             <input 
                                 type="text" 
@@ -387,7 +436,7 @@ export const InvoicePage = ({ totalAmount, selectedOrders, onBack, onGoToHistory
                     }
                     {headerType === 'corporate' &&
                         <div className="form-row">
-                            <label>购方税号</label>
+                            <label>购方税号<span className="required-star">*</span></label>
                             <input 
                                 type="text" 
                                 placeholder="填写纳税人识别号"
@@ -422,7 +471,16 @@ export const InvoicePage = ({ totalAmount, selectedOrders, onBack, onGoToHistory
                 </section>
                 
                 <section className="form-section">
-                    <h2 className="section-title">接收方式</h2>
+                    <h2 className="section-title">接收方式（必填一项）<span className="required-star">*</span></h2>
+                    <div className="form-row">
+                        <label>手机短信</label>
+                        <input 
+                            type="tel" 
+                            placeholder="请输入用于接收的手机号"
+                            value={smsPhone}
+                            onChange={(e) => setSmsPhone(e.target.value)}
+                        />
+                    </div>
                     <div className="form-row">
                         <label>电子邮箱</label>
                         <input 
@@ -451,6 +509,7 @@ export const InvoicePage = ({ totalAmount, selectedOrders, onBack, onGoToHistory
                     taxId={taxId}
                     headerType={headerType}
                     email={email}
+                    smsPhone={smsPhone}
                     idCardNumber={idCardNumber}
                     onConfirm={handleConfirmSubmit}
                     onClose={() => setIsConfirmDrawerVisible(false)}

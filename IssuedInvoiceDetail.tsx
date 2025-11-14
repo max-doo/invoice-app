@@ -101,6 +101,16 @@ const InvoiceOrdersListPage = ({ invoice, onBack }) => {
                             {order.orderNumber && (
                                 <div className="order-number">订单编号: {order.orderNumber}</div>
                             )}
+                            {order.items && order.items.length > 0 && (
+                                <div className="order-items">
+                                    {order.items.map((item, index) => (
+                                        <div key={index} className="order-item">
+                                            <span className="order-item-name">{item.name}*{item.quantity}</span>
+                                            <span className="order-item-price">{item.price.toFixed(2)}元</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -137,6 +147,7 @@ export const IssuedInvoiceDetail = ({ invoice, onBack }) => {
         return () => clearTimeout(timer);
     }, [isToastVisible]);
 
+    // 获取发票状态的样式类
     const getInvoiceStatusClass = (status) => {
         switch (status) {
             case '已退票':
@@ -147,9 +158,69 @@ export const IssuedInvoiceDetail = ({ invoice, onBack }) => {
                 return 'refunding';
             case '已重开':
                 return 'reissued';
+            case '重开中':
+                return 'reissuing';
+            case '开票失败':
+                return 'invoice-failed';
+            case '重开失败':
+                return 'reissue-failed';
+            case '退票失败':
+                return 'refund-failed';
+            case '开票取消':
+                return 'invoice-cancelled';
             default:
                 return ''; // for 已开票
         }
+    };
+
+    // 检查是否需要显示失败原因
+    const shouldShowFailureReason = () => {
+        return invoice.status === '开票失败' || 
+               invoice.status === '重开失败' || 
+               invoice.status === '退票失败' || 
+               invoice.status === '开票取消';
+    };
+
+    // 处理重试操作
+    const handleRetry = () => {
+        let newStatus = '';
+        switch (invoice.status) {
+            case '开票失败':
+                newStatus = '开票中';
+                break;
+            case '重开失败':
+                newStatus = '重开中';
+                break;
+            case '退票失败':
+                newStatus = '退票中';
+                break;
+            default:
+                return;
+        }
+        // TODO: 这里需要调用API更新发票状态，目前先使用console.log
+        console.log(`Retry invoice ${invoice.id}, new status: ${newStatus}`);
+        // 如果父组件提供了状态更新回调，应该在这里调用
+        // if (onStatusUpdate) onStatusUpdate(invoice.id, newStatus);
+    };
+
+    // 处理取消操作
+    const handleCancel = () => {
+        let newStatus = '';
+        switch (invoice.status) {
+            case '开票失败':
+                newStatus = '开票取消';
+                break;
+            case '重开失败':
+            case '退票失败':
+                newStatus = '已开票';
+                break;
+            default:
+                return;
+        }
+        // TODO: 这里需要调用API更新发票状态，目前先使用console.log
+        console.log(`Cancel invoice ${invoice.id}, new status: ${newStatus}`);
+        // 如果父组件提供了状态更新回调，应该在这里调用
+        // if (onStatusUpdate) onStatusUpdate(invoice.id, newStatus);
     };
 
     if (view === 'orders') {
@@ -203,6 +274,13 @@ export const IssuedInvoiceDetail = ({ invoice, onBack }) => {
                         <span className="detail-value">{invoice.datetime}</span>
                     </div>
 
+                    {shouldShowFailureReason() && invoice.failureReason && (
+                        <div className="detail-row failure-reason-row">
+                            <span className="detail-label">失败原因</span>
+                            <span className="detail-value failure-reason">{invoice.failureReason}</span>
+                        </div>
+                    )}
+
                     {isMoreInfoExpanded && (
                         <div className="expanded-content">
                             <div className="detail-row">
@@ -253,6 +331,7 @@ export const IssuedInvoiceDetail = ({ invoice, onBack }) => {
 
             </main>
 
+            {/* 已开票状态：显示重新发送和申请重开按钮 */}
             {invoice.status === '已开票' && (
                 <footer className="detail-footer">
                     <button className="detail-footer-btn" onClick={handleResendInvoice}>重新发送发票</button>
@@ -260,11 +339,38 @@ export const IssuedInvoiceDetail = ({ invoice, onBack }) => {
                 </footer>
             )}
             
+            {/* 已退票状态：显示申请重开按钮 */}
             {invoice.status === '已退票' && (
                 <footer className="detail-footer">
                     <button className="detail-footer-btn" onClick={() => setView('reissue')}>申请重开发票</button>
                 </footer>
             )}
+
+            {/* 开票失败状态：显示重试和取消按钮 */}
+            {invoice.status === '开票失败' && (
+                <footer className="detail-footer">
+                    <button className="detail-footer-btn cancel-btn" onClick={handleCancel}>取消</button>
+                    <button className="detail-footer-btn retry-btn" onClick={handleRetry}>重试</button>
+                </footer>
+            )}
+
+            {/* 重开失败状态：显示重试和取消按钮 */}
+            {invoice.status === '重开失败' && (
+                <footer className="detail-footer">
+                    <button className="detail-footer-btn cancel-btn" onClick={handleCancel}>取消</button>
+                    <button className="detail-footer-btn retry-btn" onClick={handleRetry}>重试</button>
+                </footer>
+            )}
+
+            {/* 退票失败状态：显示重试和取消按钮 */}
+            {invoice.status === '退票失败' && (
+                <footer className="detail-footer">
+                    <button className="detail-footer-btn cancel-btn" onClick={handleCancel}>取消</button>
+                    <button className="detail-footer-btn retry-btn" onClick={handleRetry}>重试</button>
+                </footer>
+            )}
+
+            {/* 重开中、退票中、开票取消状态：不显示任何操作按钮 */}
 
             {isEmailDrawerVisible && (
                 <EmailEditDrawer

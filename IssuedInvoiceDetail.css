@@ -93,6 +93,26 @@
     color: var(--primary-color); 
 }
 
+.detail-invoice-status.reissuing {
+    color: #2196F3; /* Blue color */
+}
+
+.detail-invoice-status.invoice-failed {
+    color: #f44336; /* Red color for failed status */
+}
+
+.detail-invoice-status.reissue-failed {
+    color: #f44336; /* Red color for failed status */
+}
+
+.detail-invoice-status.refund-failed {
+    color: #f44336; /* Red color for failed status */
+}
+
+.detail-invoice-status.invoice-cancelled {
+    color: var(--text-color-light);
+}
+
 .detail-label {
     color: var(--text-color-light);
 }
@@ -106,6 +126,18 @@
     color: var(--primary-color);
     font-size: 1.1rem;
     font-weight: 500;
+}
+
+.failure-reason-row {
+    background-color: #fff3f3;
+    border-left: 3px solid #f44336;
+    padding-left: calc(1rem - 3px);
+}
+
+.failure-reason {
+    color: #f44336;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .expand-info {
@@ -175,6 +207,14 @@
 
 .detail-footer-btn {
     background-color: #5a5a5a;
+}
+
+.detail-footer-btn.cancel-btn {
+    background-color: #9e9e9e;
+}
+
+.detail-footer-btn.retry-btn {
+    background-color: var(--primary-color);
 }
 
 /* --- Toast Notification --- */
